@@ -1,0 +1,25 @@
+version: '3.1'
+
+services:
+  uploader:
+    container_name: uploader
+    # user: 1000:1000
+    image: golang:1.19.4
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1g
+    tmpfs:
+      - /tmp:rw,exec,mode=777,size=1g
+    volumes:
+      - .:/go/src/upload-big-files
+      - ~/go/bin:/go/bin
+      - ~/go/pkg:/go/pkg      
+    ports:
+      - 8080:8080
+    working_dir: /go/src/upload-big-files
+    command: bash -c "echo started; sleep 36000;"
+    
+    

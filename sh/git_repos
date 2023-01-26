@@ -1,0 +1,2 @@
+github=https://vadim-ivlev:$GHUB_ACCESS_TOKEN@github.com/vadim-ivlev/streamupload.git
+gitlab=https://vadim-ivlev:$GLAB_ACCESS_TOKEN@gitlab.com/vadim-ivlev/streamupload.git

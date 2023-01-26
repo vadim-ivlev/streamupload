@@ -1,4 +1,5 @@
 #!/bin/bash
+echo 'Creating files for testing'
 
 dir=$(dirname "$0")
 

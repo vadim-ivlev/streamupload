@@ -20,7 +20,7 @@ services:
       # - ~/go/bin:/go/bin
       # - ~/go/pkg:/go/pkg      
     ports:
-      - 8080:8080
+      - 19090:19090
     working_dir: /streamupload
     command: bash -c "echo started; sleep 36000;"
     

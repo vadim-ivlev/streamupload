@@ -19,11 +19,11 @@ git push $github --all #master
 git push $gitlab --tags 
 git push $github --tags 
 
-echo "Подключение к сети elastic"
+echo "VPN ON -----------------------"
 nmcli con up elastic
 
 git push origin --all #master
 git push origin --tags 
 
-echo "Отключение от сети elastic"
+echo "VPN OFF ----------------------"
 nmcli con down elastic

@@ -7,11 +7,11 @@
 git pull $gitlab master
 git pull $github master
 
-echo "Подключение к сети elastic"
+echo "VPN ON -----------------------"
 nmcli con up elastic
 
 git pull origin  master
 
-echo "Отключение от сети elastic"
+echo "VPN OFF ----------------------"
 nmcli con down elastic
 

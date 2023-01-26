@@ -14,12 +14,14 @@ services:
     tmpfs:
       - /tmp:rw,exec,mode=777,size=1g
     volumes:
-      - .:/go/src/upload-big-files
-      - ~/go/bin:/go/bin
-      - ~/go/pkg:/go/pkg      
+      - .:/streamupload
+      # - ./uloads:/uploads
+      - ./go:/go
+      # - ~/go/bin:/go/bin
+      # - ~/go/pkg:/go/pkg      
     ports:
       - 8080:8080
-    working_dir: /go/src/upload-big-files
+    working_dir: /streamupload
     command: bash -c "echo started; sleep 36000;"
     
     

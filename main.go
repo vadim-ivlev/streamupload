@@ -19,13 +19,14 @@ func main() {
 
 // streamuploadHandler is a handler for uploading a file.
 func streamuploadHandler(c *gin.Context) {
-	uploadedFileName := filepath.Join(getWorkingDir(), "file")
+	uploadedFileName := filepath.Join(getWorkingDir(), "uploads", "file")
 
 	if c.GetHeader("Content-Type") != "application/octet-stream" {
 		err := fmt.Errorf("required octet-stream")
 		c.AbortWithStatusJSON(400, map[string]string{"message": err.Error()})
 		return
 	}
+	fmt.Println("Create: " + uploadedFileName)
 	file, err := os.Create(uploadedFileName)
 	if err != nil {
 		c.AbortWithStatusJSON(400, gin.H{"message": "Create: " + err.Error()})

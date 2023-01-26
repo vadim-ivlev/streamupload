@@ -6,22 +6,31 @@ services:
     # user: 1000:1000
     image: golang:1.19.4
     restart: unless-stopped
+
+    # limit cpu and memory
     deploy:
       resources:
         limits:
-          cpus: '1'
-          memory: 1g
+          cpus: '0.50'
+          memory: 512M
+    
+    # mount a small tmpfs to /tmp for go cache
     tmpfs:
       - /tmp:rw,exec,mode=777,size=1g
+
+    # go temp dir for go build cache
+    environment:
+      - GOTMPDIR=/tmp/
+    
+    
     volumes:
       - .:/streamupload
-      # - ./uloads:/uploads
       - ./go:/go
       # - ~/go/bin:/go/bin
       # - ~/go/pkg:/go/pkg      
     ports:
       - 19090:19090
     working_dir: /streamupload
-    command: bash -c "echo started; sleep 36000;"
+    command: bash -c "echo started; while true; do sleep 3; done"
     
     

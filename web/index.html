@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload files</title>
+
+</head>
+
+<body>
+    <input id="input-file" type="file">
+    <hr>
+    Post as 
+    <button id="button-form-data">multipart/form-data</button>
+    <button id="button-octet-stream">application/octet-stream</button>
+    <hr>
+    <pre id="result"></pre>
+    <script>
+
+        const inputFile = document.getElementById('input-file');
+        const result = document.getElementById('result');
+        const buttonFormData = document.getElementById('button-form-data');
+        const buttonOctetStream = document.getElementById('button-octet-stream');
+
+        buttonFormData.addEventListener('click', postFormData)
+        buttonOctetStream.addEventListener('click', postOctetStream)
+
+
+        async function postFormData() {
+            const file = inputFile.files[0]
+            const formData = new FormData()
+            formData.append('file', file)
+            try {
+                const response = await fetch('/formupload', { method: 'POST', body: formData })
+                const data = await response.json()
+                result.innerHTML = JSON.stringify(data, null, 2)
+            } catch (error) {
+                result.innerHTML = error
+            }
+        }
+
+        async function postOctetStream() {
+            const file = inputFile.files[0]
+            headers = {
+                'Content-Type': 'application/octet-stream',
+                // 'Content-Disposition': `form-data; name="file"; filename="${f.name}"`
+            }
+            try {
+                const response = await fetch(`/streamupload?filename=${file.name}`, { method: 'POST', body: file, headers: headers })
+                const data = await response.json()
+                result.innerHTML = JSON.stringify(data, null, 2)
+            } catch (error) {
+                result.innerHTML = error
+            }
+        }
+
+        // Upload progress
+        // https://stackoverflow.com/questions/35711724/upload-progress-indicators-for-fetch
+
+    </script>
+</body>
+
+</html>

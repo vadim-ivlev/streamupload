@@ -31,6 +31,7 @@ services:
     ports:
       - 19090:19090
     working_dir: /streamupload
-    command: bash -c "echo started; while true; do sleep 3; done"
+    # command: bash -c "echo started; while true; do sleep 3; done"
+    command: ./streamupload
     
     

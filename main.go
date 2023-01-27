@@ -10,23 +10,30 @@ import (
 )
 
 func main() {
-	engine := gin.Default()
-	engine.POST("/streamupload", streamuploadHandler)
-	if err := engine.Run("0.0.0.0:19090"); err != nil {
+	router := gin.Default()
+	// Set a lower memory limit for multipart forms (default is 32 MiB)
+	router.MaxMultipartMemory = 8 << 20 // 8 MiB
+	router.Static("/web/", "./web")
+	router.POST("/streamupload", streamUploadHandler)
+	router.POST("/formupload", formUploadHandler)
+	if err := router.Run("0.0.0.0:19090"); err != nil {
 		panic(err)
 	}
 }
 
-// streamuploadHandler is a handler for uploading a file.
-func streamuploadHandler(c *gin.Context) {
-	uploadedFileName := filepath.Join(getWorkingDir(), "uploads", "file")
+// streamUploadHandler is a handler for uploading a file.
+func streamUploadHandler(c *gin.Context) {
+	fileName := c.Query("filename")
+	if fileName == "" {
+		fileName = "file"
+	}
+	uploadedFileName := filepath.Join(getWorkingDir(), "uploads", fileName)
 
 	if c.GetHeader("Content-Type") != "application/octet-stream" {
 		err := fmt.Errorf("required octet-stream")
 		c.AbortWithStatusJSON(400, map[string]string{"message": err.Error()})
 		return
 	}
-	fmt.Println("Create: " + uploadedFileName)
 	file, err := os.Create(uploadedFileName)
 	if err != nil {
 		c.AbortWithStatusJSON(400, gin.H{"message": "Create: " + err.Error()})
@@ -38,7 +45,17 @@ func streamuploadHandler(c *gin.Context) {
 		c.AbortWithStatusJSON(400, gin.H{"message": "Copy: " + err.Error()})
 		return
 	}
-	c.JSON(200, map[string]string{"message": "ok stream"})
+	c.JSON(200, map[string]string{"message": "ok", "uploadedFileName": uploadedFileName})
+
+}
+
+// formUploadHandler is a handler for uploading a file.
+func formUploadHandler(c *gin.Context) {
+	file, _ := c.FormFile("file")
+	fileName := filepath.Base(file.Filename)
+	uploadedFileName := filepath.Join(getWorkingDir(), "uploads", fileName)
+	c.SaveUploadedFile(file, uploadedFileName)
+	c.JSON(200, map[string]string{"message": "ok", "uploadedFileName": uploadedFileName})
 }
 
 // getWorkingDir returns the current working directory.
